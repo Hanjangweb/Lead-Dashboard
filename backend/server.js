@@ -26,6 +26,8 @@ mongoose.connect(mongoURI)
   });
 
 // 4. Routes
+app.get("/", (req, res) => res.send("Lead Dashboard API is running..."));
+
 // This matches your frontend call: http://localhost:5000/api/auth/register
 app.use("/api/auth", authRoutes); 
 const leadRoutes = require("./routes/leadRoutes");
