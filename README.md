@@ -2,7 +2,7 @@
 
 A premium, full-stack lead management system built with Node.js, MongoDB, and React.
 
-## 🚀 Deployment Instructions (Render)
+## Deployment Instructions (Render)
 
 ### 1. Backend Deployment (Node.js)
 1. Create a **New Web Service** on Render.
@@ -28,7 +28,7 @@ A premium, full-stack lead management system built with Node.js, MongoDB, and Re
 
 ---
 
-## 🛠️ Features
+## Features
 - **Lead Management:** Full CRUD operations (Add, View, Update, Delete).
 - **Interactive Dashboard:** Real-time KPI cards and status/service-wise charts.
 - **Reporting:** Advanced filtering and CSV export.
@@ -36,7 +36,7 @@ A premium, full-stack lead management system built with Node.js, MongoDB, and Re
 - **Responsive Design:** Mobile-first layout with animated sidebar and popups.
 - **AI Insights:** Intelligent analysis of lead data.
 
-## 📦 Tech Stack
+##  Tech Stack
 - **Frontend:** React, Tailwind CSS, Framer Motion, Lucide Icons.
 - **Backend:** Node.js, Express, MongoDB (Mongoose).
 - **Auth:** JWT (JSON Web Tokens) with BcryptJS.
