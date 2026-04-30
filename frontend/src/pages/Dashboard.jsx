@@ -127,17 +127,17 @@ export default function Dashboard() {
 
   return (
     <MainLayout>
-      <motion.div variants={container} initial="hidden" animate="show" className="p-6 max-w-[1400px] mx-auto space-y-8">
+      <motion.div variants={container} initial="hidden" animate="show" className="p-4 md:p-6 max-w-[1400px] mx-auto space-y-6 md:y-8">
 
         {/* ── Header & KPI ── */}
         <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
           <motion.div variants={item} className="max-w-2xl">
-            <div className="flex items-center gap-2 text-indigo-600 font-bold text-sm uppercase tracking-widest mb-1">
-              <Activity size={16} />
+            <div className="flex items-center gap-2 text-indigo-600 font-bold text-[10px] md:text-sm uppercase tracking-widest mb-1">
+              <Activity size={14} className="md:w-4 md:h-4" />
               Real-time Analytics
             </div>
-            <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">Performance Overview</h1>
-            <p className="text-slate-500 mt-2 text-sm md:text-base leading-relaxed">
+            <h1 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tight">Performance Overview</h1>
+            <p className="text-slate-500 mt-2 text-xs md:text-base leading-relaxed">
               Track the sales funnel, regional performance, and service demand with intelligent visualisations.
             </p>
           </motion.div>
@@ -167,15 +167,15 @@ export default function Dashboard() {
         {insights?.insights && (
           <motion.div
             variants={item}
-            className="bg-white border border-slate-200 rounded-3xl p-8 relative overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-500"
+            className="bg-white border border-slate-200 rounded-3xl p-5 md:p-8 relative overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-500"
           >
-            <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-50/50 rounded-full -mr-32 -mt-32 blur-3xl" />
-            <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
-              <div className="w-20 h-20 rounded-2xl bg-indigo-50 flex items-center justify-center shrink-0 border border-indigo-100 shadow-sm">
-                <Sparkles size={40} className="text-indigo-600" />
+            <div className="absolute top-0 right-0 w-48 h-48 md:w-64 md:h-64 bg-indigo-50/50 rounded-full -mr-24 -mt-24 md:-mr-32 md:-mt-32 blur-3xl" />
+            <div className="relative z-10 flex flex-col md:flex-row items-center gap-6 md:gap-8">
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-indigo-50 flex items-center justify-center shrink-0 border border-indigo-100 shadow-sm">
+                <Sparkles size={32} className="text-indigo-600 md:w-10 md:h-10" />
               </div>
               <div className="flex-1 text-center md:text-left">
-                <h3 className="text-2xl font-black mb-4 flex items-center justify-center md:justify-start gap-2 text-slate-900">
+                <h3 className="text-xl md:text-2xl font-black mb-3 md:mb-4 flex items-center justify-center md:justify-start gap-2 text-slate-900">
                   AI Based Insights
                   <span className="text-[10px] bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-full uppercase tracking-tighter">Live</span>
                 </h3>
@@ -210,18 +210,18 @@ export default function Dashboard() {
         {/* ── Charts Row 1 ── */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Status Doughnut */}
-          <motion.div variants={item} className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-shadow duration-500">
-            <div className="flex justify-between items-center mb-8">
+          <motion.div variants={item} className="bg-white border border-slate-200 rounded-3xl p-5 md:p-8 shadow-sm hover:shadow-xl transition-shadow duration-500">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-6 md:mb-8">
               <h2 className="text-xl font-black text-slate-800">Status Breakdown</h2>
               <div className="px-3 py-1 bg-slate-100 rounded-full text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Conversion Funnel</div>
             </div>
-            <div className="flex flex-wrap gap-x-6 gap-y-2 mb-8">
+            <div className="flex flex-wrap gap-x-4 md:gap-x-6 gap-y-2 mb-6 md:mb-8">
               {["New", "Interested", "Converted", "Rejected"].map(s => {
                 const val = statusData.find(d => d.name === s)?.value ?? 0;
                 return (
-                  <div key={s} className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-[2px]" style={{ backgroundColor: STATUS_COLORS[s] }} />
-                    <span className="text-sm text-slate-600 font-medium">{s} ({val})</span>
+                  <div key={s} className="flex items-center gap-1.5 md:gap-2">
+                    <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-[2px]" style={{ backgroundColor: STATUS_COLORS[s] }} />
+                    <span className="text-xs md:text-sm text-slate-600 font-medium">{s} ({val})</span>
                   </div>
                 );
               })}
@@ -241,17 +241,17 @@ export default function Dashboard() {
           </motion.div>
 
           {/* City Vertical Bar */}
-          <motion.div variants={item} className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-shadow duration-500">
-            <div className="flex justify-between items-center mb-8">
+          <motion.div variants={item} className="bg-white border border-slate-200 rounded-3xl p-5 md:p-8 shadow-sm hover:shadow-xl transition-shadow duration-500">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-6 md:mb-8">
               <h2 className="text-xl font-black text-slate-800">City-wise Distribution</h2>
               <div className="px-3 py-1 bg-slate-100 rounded-full text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Geographic Reach</div>
             </div>
-            <div className="h-[340px]">
+            <div className="h-[280px] md:h-[340px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={cityData} margin={{ top: 10, right: 10, left: -25, bottom: 40 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: "#64748b", fontSize: 12, fontWeight: 500 }} angle={-25} textAnchor="end" dy={5} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fill: "#64748b", fontSize: 12 }} />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: "#64748b", fontSize: 10, fontWeight: 500 }} angle={-25} textAnchor="end" dy={5} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fill: "#64748b", fontSize: 10 }} />
                   <Tooltip cursor={{ fill: "#f8fafc" }} content={<CustomTooltip />} />
                   <Bar dataKey="value" fill={CITY_COLOR} radius={[6, 6, 0, 0]} maxBarSize={48} />
                 </BarChart>
@@ -261,27 +261,27 @@ export default function Dashboard() {
         </div>
 
         {/* ── Service Horizontal Bar ── */}
-        <motion.div variants={item} className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-shadow duration-500">
-          <div className="flex justify-between items-center mb-8">
+        <motion.div variants={item} className="bg-white border border-slate-200 rounded-3xl p-5 md:p-8 shadow-sm hover:shadow-xl transition-shadow duration-500">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-6 md:mb-8">
             <h2 className="text-xl font-black text-slate-800">Service-wise Distribution</h2>
             <div className="px-3 py-1 bg-slate-100 rounded-full text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Market Demand</div>
           </div>
-          <div className="flex flex-wrap gap-x-5 gap-y-2 mb-8">
+          <div className="flex flex-wrap gap-x-4 md:gap-x-5 gap-y-2 mb-6 md:mb-8">
             {mappedServiceData.map(s => (
-              <div key={s.name} className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: s.fill }} />
-                <span className="text-sm font-semibold text-slate-600">{s.name}</span>
+              <div key={s.name} className="flex items-center gap-1.5 md:gap-2">
+                <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full shadow-sm" style={{ backgroundColor: s.fill }} />
+                <span className="text-xs md:text-sm font-semibold text-slate-600">{s.name}</span>
               </div>
             ))}
           </div>
-          <div className="h-[320px]">
+          <div className="h-[280px] md:h-[320px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart layout="vertical" data={mappedServiceData} margin={{ top: 0, right: 20, left: 40, bottom: 0 }}>
+              <BarChart layout="vertical" data={mappedServiceData} margin={{ top: 0, right: 20, left: 10, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                <XAxis type="number" axisLine={false} tickLine={false} tick={{ fill: "#64748b", fontSize: 12 }} />
-                <YAxis type="category" dataKey="name" axisLine={false} tickLine={false} tick={{ fill: "#64748b", fontSize: 12, fontWeight: 600 }} width={120} />
+                <XAxis type="number" axisLine={false} tickLine={false} tick={{ fill: "#64748b", fontSize: 10 }} />
+                <YAxis type="category" dataKey="name" axisLine={false} tickLine={false} tick={{ fill: "#64748b", fontSize: 10, fontWeight: 600 }} width={80} />
                 <Tooltip cursor={{ fill: "#f8fafc" }} content={<CustomTooltip />} />
-                <Bar dataKey="value" radius={[0, 8, 8, 0]} maxBarSize={20}>
+                <Bar dataKey="value" radius={[0, 8, 8, 0]} maxBarSize={18}>
                   {mappedServiceData.map((entry, index) => (
                     <Cell key={index} fill={entry.fill} />
                   ))}

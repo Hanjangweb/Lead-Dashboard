@@ -1,9 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
 import { LayoutDashboard, Users, FileBarChart, LogOut, Hexagon, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDispatch } from "react-redux";
+import { logout } from "../store/slices/authSlice";
 
 export default function Sidebar({ isOpen, setIsOpen }) {
   const { pathname } = useLocation();
+  const dispatch = useDispatch();
 
   const navItems = [
     { name: "Dashboard", path: "/", icon: LayoutDashboard },
@@ -12,7 +15,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
   ];
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    dispatch(logout());
     window.location.href = "/login";
   };
 
@@ -108,7 +111,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="relative h-full"
+              className="relative h-full w-[280px]"
             >
               {SidebarContent}
             </motion.div>

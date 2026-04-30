@@ -2,13 +2,22 @@ import { useState } from 'react';
 import { API } from '../services/api';
 import { useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { Eye, EyeOff, ShieldCheck, ShieldAlert } from 'lucide-react';
 
 const Register = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+
+  // Strong password regex: 8+ chars, at least 1 letter and 1 number
+  const isStrong = (pw) => pw.length >= 8 && /[A-Za-z]/.test(pw) && /[0-9]/.test(pw);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isStrong(formData.password)) {
+      toast.error("Password must be 8+ characters and contain both letters and numbers.");
+      return;
+    }
     try {
       await API.post('/auth/register', formData);
       toast.success("Registration Successful! Please Login.");
@@ -60,14 +69,29 @@ const Register = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <input 
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all" 
-              type="password" 
-              placeholder="••••••••" 
-              value={formData.password}
-              onChange={(e) => setFormData({...formData, password: e.target.value})} 
-              required
-            />
+            <div className="relative">
+              <input 
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all" 
+                type={showPassword ? "text" : "password"} 
+                placeholder="••••••••" 
+                value={formData.password}
+                onChange={(e) => setFormData({...formData, password: e.target.value})} 
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-indigo-600 transition-colors"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+            {formData.password && (
+              <div className={`flex items-center gap-2 mt-2 text-[10px] font-bold uppercase tracking-wider ${isStrong(formData.password) ? 'text-emerald-600' : 'text-amber-500'}`}>
+                {isStrong(formData.password) ? <ShieldCheck size={14} /> : <ShieldAlert size={14} />}
+                {isStrong(formData.password) ? 'Strong Password' : 'Weak: Needs 8+ chars, letters & numbers'}
+              </div>
+            )}
           </div>
         </div>
 
