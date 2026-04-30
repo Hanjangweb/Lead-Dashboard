@@ -18,13 +18,18 @@ A premium, full-stack lead management system built with Node.js, MongoDB, and Re
    - `DB_NAME`: `LeadDashboard`
 
 ### 2. Frontend Deployment (React/Vite)
-1. Create a **New Static Site** on Render.
-2. Connect your GitHub repository.
-3. **Root Directory:** `frontend`
-4. **Build Command:** `npm install; npm run build`
-5. **Publish Directory:** `dist`
-6. **Environment Variables:**
+1. Go to your Vercel Dashboard and select Add New > Project.
+2. Import your GitHub repository.
+3. Framework Preset: Select Vite (Vercel usually auto-detects this).
+4. **Root Directory:** `frontend`
+5. **Build Command:** `npm install; npm run build`
+6. **Publish Directory:** `dist`
+7. **Environment Variables:**
    - `VITE_API_URL`: `https://your-backend-url.onrender.com/api`
+8. Click Deploy.
+
+Note: To ensure client-side routing works correctly on Vercel (preventing 404s on refresh), ensure you have a vercel.json file in your frontend folder with:
+{ "rewrites": [{ "source": "/(.*)", "destination": "/" }] }
 
 ---
 
