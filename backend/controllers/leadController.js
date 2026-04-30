@@ -22,8 +22,10 @@ exports.getLeads = async (req, res) => {
     if (startDate || endDate) {
       filter.createdAt = {};
       if (startDate) filter.createdAt.$gte = new Date(startDate);
-      // Set end date to the end of the day
-      if (endDate) filter.createdAt.$lte = new Date(`${endDate}T23:59:59.999Z`);
+      // Set end date to the end of the day if it's just YYYY-MM-DD
+      if (endDate) {
+        filter.createdAt.$lte = new Date(endDate.includes('T') ? endDate : `${endDate}T23:59:59.999Z`);
+      }
     }
     
     if (search) {
@@ -120,7 +122,9 @@ exports.exportCSV = async (req, res) => {
     if (startDate || endDate) {
       filter.createdAt = {};
       if (startDate) filter.createdAt.$gte = new Date(startDate);
-      if (endDate) filter.createdAt.$lte = new Date(`${endDate}T23:59:59.999Z`);
+      if (endDate) {
+        filter.createdAt.$lte = new Date(endDate.includes('T') ? endDate : `${endDate}T23:59:59.999Z`);
+      }
     }
 
     const leads = await Lead.find(filter).sort({ createdAt: -1 });

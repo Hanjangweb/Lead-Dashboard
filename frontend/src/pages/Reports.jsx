@@ -31,11 +31,28 @@ export default function Reports() {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  const getParams = (f) => {
+    const params = Object.fromEntries(Object.entries(f).filter(([, v]) => v !== ""));
+    if (params.startDate) {
+      // Create a Date object assuming UTC if YYYY-MM-DD
+      const d = new Date(params.startDate);
+      // We want local start of day. new Date("2026-04-30") creates UTC midnight.
+      // d.getUTCFullYear() gives the year, etc.
+      // Actually simpler: we can just construct local date using the string parts.
+      const [y, m, day] = params.startDate.split('-');
+      params.startDate = new Date(y, m - 1, day, 0, 0, 0).toISOString();
+    }
+    if (params.endDate) {
+      const [y, m, day] = params.endDate.split('-');
+      params.endDate = new Date(y, m - 1, day, 23, 59, 59, 999).toISOString();
+    }
+    return params;
+  };
+
   const fetchData = async (f = filters) => {
     setIsLoading(true);
     try {
-      // Strip empty strings so the backend doesn't receive empty query params
-      const params = Object.fromEntries(Object.entries(f).filter(([, v]) => v !== ""));
+      const params = getParams(f);
       const res = await API.get("/leads", { params });
       setData(res.data.data ?? res.data);
     } catch {
@@ -55,7 +72,7 @@ export default function Reports() {
   // ── CSV export (calls backend /leads/export with same filters) ─────────────
   const handleExport = async () => {
     try {
-      const params = Object.fromEntries(Object.entries(filters).filter(([, v]) => v !== ""));
+      const params = getParams(filters);
       const res = await API.get("/leads/export", { params, responseType: "blob" });
       const url = window.URL.createObjectURL(new Blob([res.data]));
       const a = Object.assign(document.createElement("a"), { href: url, download: "leads_report.csv" });
@@ -144,7 +161,7 @@ export default function Reports() {
             <div>
               <label className="block text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest ml-1">City</label>
               <select value={filters.city} onChange={e => setF("city", e.target.value)}
-                className="w-full rounded-2xl border border-slate-200 p-3.5 text-sm font-semibold text-slate-600 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all cursor-pointer">
+                className="w-full rounded-2xl border border-slate-200 p-3.5 text-sm font-semibold bg-white text-slate-900 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all cursor-pointer">
                 <option value="">All Regions</option>
                 {CITIES.map(c => <option key={c}>{c}</option>)}
               </select>
@@ -153,7 +170,7 @@ export default function Reports() {
             <div>
               <label className="block text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest ml-1">Service</label>
               <select value={filters.service} onChange={e => setF("service", e.target.value)}
-                className="w-full rounded-2xl border border-slate-200 p-3.5 text-sm font-semibold text-slate-600 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all cursor-pointer">
+                className="w-full rounded-2xl border border-slate-200 p-3.5 text-sm font-semibold bg-white text-slate-900 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all cursor-pointer">
                 <option value="">All Services</option>
                 {SERVICES.map(s => <option key={s}>{s}</option>)}
               </select>
@@ -162,7 +179,7 @@ export default function Reports() {
             <div>
               <label className="block text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest ml-1">Status</label>
               <select value={filters.status} onChange={e => setF("status", e.target.value)}
-                className="w-full rounded-2xl border border-slate-200 p-3.5 text-sm font-semibold text-slate-600 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all cursor-pointer">
+                className="w-full rounded-2xl border border-slate-200 p-3.5 text-sm font-semibold bg-white text-slate-900 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all cursor-pointer">
                 <option value="">All Statuses</option>
                 {STATUSES.map(s => <option key={s}>{s}</option>)}
               </select>
@@ -171,13 +188,13 @@ export default function Reports() {
             <div>
               <label className="block text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest ml-1">From Date</label>
               <input type="date" value={filters.startDate} onChange={e => setF("startDate", e.target.value)}
-                className="w-full rounded-2xl border border-slate-200 p-3.5 text-sm font-semibold text-slate-600 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all cursor-pointer" />
+                className="w-full rounded-2xl border border-slate-200 p-3.5 text-sm font-semibold bg-white text-slate-900 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all cursor-pointer" />
             </div>
 
             <div>
               <label className="block text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest ml-1">To Date</label>
               <input type="date" value={filters.endDate} onChange={e => setF("endDate", e.target.value)}
-                className="w-full rounded-2xl border border-slate-200 p-3.5 text-sm font-semibold text-slate-600 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all cursor-pointer" />
+                className="w-full rounded-2xl border border-slate-200 p-3.5 text-sm font-semibold bg-white text-slate-900 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all cursor-pointer" />
             </div>
           </div>
 
