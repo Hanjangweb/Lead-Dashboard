@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '../store/slices/authSlice';
-import axios from 'axios';
+import { API } from '../services/api';
 import { useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
@@ -14,7 +14,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:9000/api/auth/login', { email, password });
+      const res = await API.post('/auth/login', { email, password });
       dispatch(setCredentials(res.data));
       toast.success("Welcome back! Login successful.");
       navigate('/dashboard');
