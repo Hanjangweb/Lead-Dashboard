@@ -1,0 +1,4 @@
+name,mobile,email,city,service,budget,status,createdAt,updatedAt,__v,month
+James,9876382097,james@example.com,gurgaon,shopify,10000,Interested,2026-04-29 19:51:03.530,2026-04-29 20:48:31.244,0,2026-04
+Sham,9876267398,sham@example.com,Delhi,SEO,10000,New,2026-04-29 21:15:29.085,2026-04-29 21:15:29.085,0,2026-04
+Rajest kumar,9876236789,rajest@example.com,Delhi,Web Development,18888,Converted,2026-04-29 21:17:28.867,2026-04-29 21:17:28.867,0,2026-04
