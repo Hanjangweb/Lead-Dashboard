@@ -139,7 +139,7 @@ exports.exportCSV = async (req, res) => {
       service: lead.service,
       budget: lead.budget,
       status: lead.status,
-      createdAt: lead.createdAt.toISOString().split('T')[0] // 'YYYY-MM-DD'
+      createdAt: `\t${lead.createdAt.toISOString().split('T')[0]}` // 'YYYY-MM-DD'
     }));
 
     const fields = ['name', 'mobile', 'email', 'city', 'service', 'budget', 'status', 'createdAt'];
