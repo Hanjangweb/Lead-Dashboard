@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 
 const STATUSES = ["New", "Interested", "Converted", "Rejected"];
 const SERVICES = [
-  "Web Development", "Mobile App", "SEO", "UI/UX Design", "Cloud Services", 
+  "Web Development", "Mobile App", "SEO", "UI/UX Design", "Cloud Services",
   "Digital Marketing", "Content Writing", "Graphic Design", "IT Consulting", "Data Analytics"
 ];
 const CITIES = [
@@ -16,19 +16,19 @@ const CITIES = [
 ];
 
 const STATUS_BADGE = {
-  New:        "bg-blue-50   text-blue-700",
+  New: "bg-blue-50   text-blue-700",
   Interested: "bg-amber-50  text-amber-700",
-  Converted:  "bg-emerald-50 text-emerald-700",
-  Rejected:   "bg-red-50    text-red-600",
+  Converted: "bg-emerald-50 text-emerald-700",
+  Rejected: "bg-red-50    text-red-600",
 };
 
 const fmtBudget = (n) => "₹" + Number(n).toLocaleString("en-IN");
 
-const emptyFilters = { city:"", status:"", service:"", startDate:"", endDate:"" };
+const emptyFilters = { city: "", status: "", service: "", startDate: "", endDate: "" };
 
 export default function Reports() {
-  const [filters,   setFilters]   = useState(emptyFilters);
-  const [data,      setData]      = useState([]);
+  const [filters, setFilters] = useState(emptyFilters);
+  const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchData = async (f = filters) => {
@@ -56,9 +56,9 @@ export default function Reports() {
   const handleExport = async () => {
     try {
       const params = Object.fromEntries(Object.entries(filters).filter(([, v]) => v !== ""));
-      const res = await API.get("/leads/export", { params, responseType:"blob" });
-      const url  = window.URL.createObjectURL(new Blob([res.data]));
-      const a    = Object.assign(document.createElement("a"), { href:url, download:"leads_report.csv" });
+      const res = await API.get("/leads/export", { params, responseType: "blob" });
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const a = Object.assign(document.createElement("a"), { href: url, download: "leads_report.csv" });
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -71,10 +71,10 @@ export default function Reports() {
 
   // ── computed summary ────────────────────────────────────────────────────────
   const summary = useMemo(() => {
-    const total     = data.length;
+    const total = data.length;
     const converted = data.filter(d => d.status === "Converted").length;
     const totalBudget = data.reduce((a, d) => a + (d.budget || 0), 0);
-    const convRate  = total ? ((converted / total) * 100).toFixed(1) : "0.0";
+    const convRate = total ? ((converted / total) * 100).toFixed(1) : "0.0";
     const avgBudget = total ? Math.round(totalBudget / total) : 0;
     return { total, converted, convRate, totalBudget, avgBudget };
   }, [data]);
@@ -85,7 +85,7 @@ export default function Reports() {
 
   return (
     <MainLayout>
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         className="p-8 max-w-[1500px] mx-auto space-y-8"
@@ -96,7 +96,7 @@ export default function Reports() {
             <h1 className="text-4xl font-black text-slate-900 tracking-tight">Reporting System</h1>
             <p className="text-slate-500 mt-2 font-medium">Analyse performance trends and export detailed lead data.</p>
           </div>
-          <motion.button 
+          <motion.button
             whileHover={{ scale: 1.03, y: -2 }}
             whileTap={{ scale: 0.97 }}
             onClick={handleExport}
@@ -111,12 +111,12 @@ export default function Reports() {
         {/* ── Summary Cards ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            { label:"Matching Leads",  value: summary.total, color:"text-indigo-600", bg:"bg-indigo-50" },
-            { label:"Total Pipeline",    value: fmtBudget(summary.totalBudget), color:"text-purple-600", bg:"bg-purple-50" },
-            { label:"Conversion Rate", value: `${summary.convRate}%`, color:"text-emerald-600", bg:"bg-emerald-50" },
-            { label:"Avg Budget",      value: summary.total ? fmtBudget(summary.avgBudget) : "—", color:"text-amber-600", bg:"bg-amber-50" },
+            { label: "Matching Leads", value: summary.total, color: "text-indigo-600", bg: "bg-indigo-50" },
+            { label: "Total Pipeline", value: fmtBudget(summary.totalBudget), color: "text-purple-600", bg: "bg-purple-50" },
+            { label: "Conversion Rate", value: `${summary.convRate}%`, color: "text-emerald-600", bg: "bg-emerald-50" },
+            { label: "Avg Budget", value: summary.total ? fmtBudget(summary.avgBudget) : "—", color: "text-amber-600", bg: "bg-amber-50" },
           ].map(c => (
-            <motion.div 
+            <motion.div
               key={c.label}
               whileHover={{ y: -5 }}
               className="bg-white rounded-[2rem] border border-slate-100 p-8 shadow-sm hover:shadow-xl transition-all"
@@ -187,7 +187,7 @@ export default function Reports() {
                 bg-slate-50 hover:bg-slate-100 text-sm font-bold transition-all flex items-center gap-2 cursor-pointer">
               <RefreshCcw size={16} /> Reset
             </button>
-            <motion.button 
+            <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => fetchData()}
@@ -216,18 +216,18 @@ export default function Reports() {
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="bg-white text-slate-400 text-[10px] uppercase tracking-[0.2em] font-black border-b border-slate-50">
-                  <th className="px-10 py-5 font-black">Client Name</th>
-                  <th className="px-10 py-5 font-black">Region</th>
-                  <th className="px-10 py-5 font-black">Service Type</th>
-                  <th className="px-10 py-5 font-black">Budget</th>
-                  <th className="px-10 py-5 font-black">Status</th>
-                  <th className="px-10 py-5 font-black text-right">Acquisition Date</th>
+                  <th className="px-5 md:px-10 py-5 font-black whitespace-nowrap">Client Name</th>
+                  <th className="px-5 md:px-10 py-5 font-black whitespace-nowrap">Region</th>
+                  <th className="px-5 md:px-10 py-5 font-black whitespace-nowrap">Service Type</th>
+                  <th className="px-5 md:px-10 py-5 font-black whitespace-nowrap">Budget</th>
+                  <th className="px-5 md:px-10 py-5 font-black whitespace-nowrap">Status</th>
+                  <th className="px-5 md:px-10 py-5 font-black text-right whitespace-nowrap">Acquisition Date</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
                 {data.length === 0 && !isLoading ? (
                   <tr>
-                    <td colSpan={6} className="px-10 py-24 text-center">
+                    <td colSpan={6} className="px-5 md:px-10 py-24 text-center">
                       <div className="flex flex-col items-center gap-2 opacity-20">
                         <Filter size={40} />
                         <p className="font-bold text-xl">No Matching Analytics</p>
@@ -235,30 +235,30 @@ export default function Reports() {
                     </td>
                   </tr>
                 ) : data.map((d, i) => (
-                  <motion.tr 
+                  <motion.tr
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: i * 0.05 }}
-                    key={d._id} 
+                    key={d._id}
                     className="hover:bg-indigo-50/30 transition-colors group"
                   >
-                    <td className="px-10 py-5 font-bold text-slate-900">{d.name}</td>
-                    <td className="px-10 py-5 text-slate-600 font-semibold">{d.city}</td>
-                    <td className="px-10 py-5">
+                    <td className="px-5 md:px-10 py-5 font-bold text-slate-900 whitespace-nowrap">{d.name}</td>
+                    <td className="px-5 md:px-10 py-5 text-slate-600 font-semibold whitespace-nowrap">{d.city}</td>
+                    <td className="px-5 md:px-10 py-5 whitespace-nowrap">
                       <span className="px-3 py-1 bg-slate-100 text-slate-600 rounded-lg text-[11px] font-black uppercase tracking-tight">
                         {d.service}
                       </span>
                     </td>
-                    <td className="px-10 py-5 font-black text-slate-900">{fmtBudget(d.budget)}</td>
-                    <td className="px-10 py-5">
+                    <td className="px-5 md:px-10 py-5 font-black text-slate-900 whitespace-nowrap">{fmtBudget(d.budget)}</td>
+                    <td className="px-5 md:px-10 py-5 whitespace-nowrap">
                       <span className={`inline-flex items-center px-4 py-1 rounded-full
                         text-[10px] font-black uppercase tracking-tighter shadow-sm ${STATUS_BADGE[d.status] ?? ""}`}>
                         {d.status}
                       </span>
                     </td>
-                    <td className="px-10 py-5 text-slate-400 font-medium text-right text-xs">
+                    <td className="px-5 md:px-10 py-5 text-slate-400 font-medium text-right text-xs whitespace-nowrap">
                       {new Date(d.createdAt).toLocaleDateString("en-IN", {
-                        day:"2-digit", month:"short", year:"numeric"
+                        day: "2-digit", month: "short", year: "numeric"
                       })}
                     </td>
                   </motion.tr>

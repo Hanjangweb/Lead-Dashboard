@@ -8,7 +8,7 @@ import { useSearchParams } from "react-router-dom";
 
 const STATUSES = ["New", "Interested", "Converted", "Rejected"];
 const SERVICES = [
-  "Web Development", "Mobile App", "SEO", "UI/UX Design", "Cloud Services", 
+  "Web Development", "Mobile App", "SEO", "UI/UX Design", "Cloud Services",
   "Digital Marketing", "Content Writing", "Graphic Design", "IT Consulting", "Data Analytics"
 ];
 const CITIES = [
@@ -23,22 +23,22 @@ const STATUS_STYLE = {
   Rejected: "bg-red-50 text-red-600",
 };
 
-const emptyForm = { name:"", mobile:"", email:"", city:"Mumbai", service:"Web Development", budget:"", status:"New" };
+const emptyForm = { name: "", mobile: "", email: "", city: "Mumbai", service: "Web Development", budget: "", status: "New" };
 
 // ─── helpers ───────────────────────────────────────────────────────────────────
 const fmtBudget = (n) => "₹" + Number(n).toLocaleString("en-IN"); // FIX: was showing "$"
 
 export default function Leads() {
   const [searchParams] = useSearchParams();
-  const [leads,       setLeads]       = useState([]);
-  const [modalMode,   setModalMode]   = useState(null);
-  const [showAdd,     setShowAdd]     = useState(false);
-  const [editTarget,  setEditTarget]  = useState(null);
-  const [formData,    setFormData]    = useState(emptyForm);
-  const [confirmDel,  setConfirmDel]  = useState(null);
-  const [search,      setSearch]      = useState(searchParams.get("q") ?? "");
-  const [filterStatus,setFilterStatus]= useState("");
-  const [loading,     setLoading]     = useState(false);
+  const [leads, setLeads] = useState([]);
+  const [modalMode, setModalMode] = useState(null);
+  const [showAdd, setShowAdd] = useState(false);
+  const [editTarget, setEditTarget] = useState(null);
+  const [formData, setFormData] = useState(emptyForm);
+  const [confirmDel, setConfirmDel] = useState(null);
+  const [search, setSearch] = useState(searchParams.get("q") ?? "");
+  const [filterStatus, setFilterStatus] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // Sync URL ?q= param whenever it changes (e.g. header search)
   useEffect(() => {
@@ -83,13 +83,13 @@ export default function Leads() {
 
   const openEdit = (lead) => {
     setFormData({
-      name:    lead.name,
-      mobile:  lead.mobile,
-      email:   lead.email,
-      city:    lead.city,
+      name: lead.name,
+      mobile: lead.mobile,
+      email: lead.email,
+      city: lead.city,
       service: lead.service,
-      budget:  String(lead.budget),
-      status:  lead.status,
+      budget: String(lead.budget),
+      status: lead.status,
     });
     setEditTarget(lead);
     setModalMode("edit");
@@ -138,9 +138,9 @@ export default function Leads() {
   const visible = leads.filter(l => {
     const q = search.toLowerCase();
     const matchQ = !q || l.name.toLowerCase().includes(q)
-                      || l.email.toLowerCase().includes(q)
-                      || l.city.toLowerCase().includes(q);
-    const matchS  = !filterStatus || l.status === filterStatus;
+      || l.email.toLowerCase().includes(q)
+      || l.city.toLowerCase().includes(q);
+    const matchS = !filterStatus || l.status === filterStatus;
     return matchQ && matchS;
   });
 
@@ -149,7 +149,7 @@ export default function Leads() {
 
   return (
     <MainLayout>
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         className="p-8 max-w-[1500px] mx-auto space-y-8"
@@ -160,7 +160,7 @@ export default function Leads() {
             <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">Lead Management</h1>
             <p className="text-slate-500 mt-2 text-sm md:text-base font-medium">Keep track of your prospects and their journey through the pipeline.</p>
           </div>
-          <motion.button 
+          <motion.button
             whileHover={{ scale: 1.03, y: -2 }}
             whileTap={{ scale: 0.97 }}
             onClick={openAdd}
@@ -176,16 +176,16 @@ export default function Leads() {
         <div className="flex flex-col md:flex-row gap-4">
           <div className="relative flex-1 group">
             <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
-            <input 
-              value={search} 
+            <input
+              value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search name, email or city…"
               className="w-full pl-12 pr-4 py-3.5 rounded-2xl border border-slate-200 text-sm bg-white
-                focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none shadow-sm transition-all" 
+                focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none shadow-sm transition-all"
             />
           </div>
-          <select 
-            value={filterStatus} 
+          <select
+            value={filterStatus}
             onChange={e => setFilterStatus(e.target.value)}
             className="px-5 py-3.5 rounded-2xl border border-slate-200 text-sm bg-white font-semibold text-slate-600
               focus:ring-4 focus:ring-indigo-500/10 outline-none cursor-pointer shadow-sm hover:border-slate-300 transition-all"
@@ -228,12 +228,12 @@ export default function Leads() {
                 ) : (
                   <AnimatePresence mode="popLayout">
                     {visible.map(l => (
-                      <motion.tr 
+                      <motion.tr
                         layout
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        key={l._id} 
+                        key={l._id}
                         className="hover:bg-indigo-50/30 transition-colors group"
                       >
                         <td className="px-8 py-5 font-bold text-slate-900 whitespace-nowrap">{l.name}</td>
@@ -248,8 +248,8 @@ export default function Leads() {
                         <td className="px-8 py-5 font-black text-slate-800 whitespace-nowrap">{fmtBudget(l.budget)}</td>
                         <td className="px-8 py-5 whitespace-nowrap">
                           <div className="flex justify-center">
-                            <select 
-                              value={l.status} 
+                            <select
+                              value={l.status}
                               onChange={e => updateStatus(l._id, e.target.value)}
                               className={`text-[11px] font-black uppercase tracking-tighter border-0 rounded-full px-4 py-1.5 cursor-pointer
                                 outline-none focus:ring-4 focus:ring-indigo-500/10 shadow-sm ${STATUS_STYLE[l.status]}`}
@@ -260,7 +260,7 @@ export default function Leads() {
                         </td>
                         <td className="px-8 py-5 whitespace-nowrap">
                           <div className="flex items-center justify-end gap-3 transition-opacity">
-                            <motion.button 
+                            <motion.button
                               whileHover={{ scale: 1.1 }}
                               whileTap={{ scale: 0.9 }}
                               onClick={() => openEdit(l)}
@@ -268,7 +268,7 @@ export default function Leads() {
                             >
                               <Pencil size={16} />
                             </motion.button>
-                            <motion.button 
+                            <motion.button
                               whileHover={{ scale: 1.1 }}
                               whileTap={{ scale: 0.9 }}
                               onClick={() => setConfirmDel(l._id)}
@@ -292,14 +292,14 @@ export default function Leads() {
       <AnimatePresence>
         {(showAdd || editTarget) && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={closeModal}
-              className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm cursor-pointer" 
+              className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm cursor-pointer"
             />
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -351,10 +351,10 @@ export default function Leads() {
                     </select>
                   </div>
                   <div className="col-span-2 pt-6">
-                    <motion.button 
+                    <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      type="submit" 
+                      type="submit"
                       className="w-full bg-indigo-600 text-white py-5 rounded-[1.5rem] font-black text-lg shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition-all flex items-center justify-center gap-3 cursor-pointer"
                     >
                       {editTarget ? "Update Profile" : "Confirm & Save Lead"}
@@ -372,14 +372,14 @@ export default function Leads() {
       <AnimatePresence>
         {confirmDel && (
           <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setConfirmDel(null)}
-              className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm cursor-pointer" 
+              className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm cursor-pointer"
             />
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}

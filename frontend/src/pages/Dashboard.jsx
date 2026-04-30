@@ -24,14 +24,14 @@ const CustomTooltip = ({ active, payload, label }) =>
 // ─── normalise aggregation arrays ─────────────────────────────────────────────
 const norm = (arr = []) =>
   arr.map(item => ({
-    name:  item._id   ?? item.name  ?? "",
+    name: item._id ?? item.name ?? "",
     value: item.count ?? item.value ?? 0,
   }));
 
 export default function Dashboard() {
-  const [stats,       setStats]       = useState(null);
-  const [insights,    setInsights]    = useState(null);
-  const [loading,     setLoading]     = useState(true);
+  const [stats, setStats] = useState(null);
+  const [insights, setInsights] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [actionModal, setActionModal] = useState(false);
 
   useEffect(() => {
@@ -70,26 +70,26 @@ export default function Dashboard() {
     );
   }
 
-  const statusData    = norm(stats?.byStatus);
-  const cityData      = norm(stats?.byCity);
-  const serviceData   = norm(stats?.byService);
-  const total         = stats?.total ?? 0;
-  const momGrowth     = Number(insights?.momGrowth ?? 0);
+  const statusData = norm(stats?.byStatus);
+  const cityData = norm(stats?.byCity);
+  const serviceData = norm(stats?.byService);
+  const total = stats?.total ?? 0;
+  const momGrowth = Number(insights?.momGrowth ?? 0);
   const growthDisplay = momGrowth > 0 ? `+${momGrowth}%` : momGrowth < 0 ? `${momGrowth}%` : "—";
-  const GrowthIcon    = momGrowth > 0 ? TrendingUp : momGrowth < 0 ? TrendingDown : Minus;
-  const growthColor   = momGrowth > 0
+  const GrowthIcon = momGrowth > 0 ? TrendingUp : momGrowth < 0 ? TrendingDown : Minus;
+  const growthColor = momGrowth > 0
     ? "text-emerald-600 bg-emerald-50"
     : momGrowth < 0
-    ? "text-rose-500 bg-rose-50"
-    : "text-slate-400 bg-slate-100";
+      ? "text-rose-500 bg-rose-50"
+      : "text-slate-400 bg-slate-100";
 
-  const STATUS_COLORS  = { New: "#2563eb", Interested: "#f59e0b", Converted: "#10b981", Rejected: "#ef4444" };
-  const CITY_COLOR     = "#2563eb";
-  const SERVICE_COLORS = ["#2563eb","#059669","#f59e0b","#db2777","#7c3aed","#0284c7","#4f46e5","#c026d3","#dc2626","#0891b2"];
+  const STATUS_COLORS = { New: "#2563eb", Interested: "#f59e0b", Converted: "#10b981", Rejected: "#ef4444" };
+  const CITY_COLOR = "#2563eb";
+  const SERVICE_COLORS = ["#2563eb", "#059669", "#f59e0b", "#db2777", "#7c3aed", "#0284c7", "#4f46e5", "#c026d3", "#dc2626", "#0891b2"];
   const mappedServiceData = serviceData.map((s, i) => ({ ...s, fill: SERVICE_COLORS[i % SERVICE_COLORS.length] }));
 
   const container = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.1 } } };
-  const item      = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } };
+  const item = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } };
 
   // Build action plan from real insight data
   const actionPlan = [
@@ -328,11 +328,10 @@ export default function Dashboard() {
                   >
                     <span className="text-2xl leading-none">{step.icon}</span>
                     <div className="flex-1">
-                      <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full inline-block ${
-                        step.priority === "HIGH" ? "bg-rose-100 text-rose-600"
-                        : step.priority === "MED" ? "bg-amber-100 text-amber-600"
-                        : "bg-slate-200 text-slate-500"
-                      }`}>{step.priority}</span>
+                      <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full inline-block ${step.priority === "HIGH" ? "bg-rose-100 text-rose-600"
+                          : step.priority === "MED" ? "bg-amber-100 text-amber-600"
+                            : "bg-slate-200 text-slate-500"
+                        }`}>{step.priority}</span>
                       <p className="text-slate-700 font-semibold mt-2 text-sm leading-relaxed">{step.action}</p>
                     </div>
                   </motion.div>
