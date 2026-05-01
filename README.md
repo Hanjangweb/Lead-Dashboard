@@ -27,12 +27,9 @@ A premium, full-stack lead management system built with Node.js, MongoDB, and Re
 7. **Environment Variables:**
    - `VITE_API_URL`: `https://your-backend-url.onrender.com/api`
 8. Click Deploy.
-
-<<<<<<< HEAD
 9. **Note:** To ensure client-side routing works correctly on Vercel (preventing 404s on refresh), ensure you have a vercel.json file in your frontend folder with:
 =======
 Note: To ensure client-side routing works correctly on Vercel (preventing 404s on refresh), ensure you have a vercel.json file in your frontend folder with:
->>>>>>> cde95586429637ac7a06ca86f5a71728823746ce
 { "rewrites": [{ "source": "/(.*)", "destination": "/" }] }
 
 ---
