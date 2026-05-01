@@ -44,5 +44,5 @@ Note: To ensure client-side routing works correctly on Vercel (preventing 404s o
 
 ##  Tech Stack
 - **Frontend:** React, Tailwind CSS, Framer Motion, Lucide Icons.
-- **Backend:** Node.js, Express, MongoDB (Mongoose).
+- **Backend:** Node.js, Python, Express, MongoDB (Mongoose).
 - **Auth:** JWT (JSON Web Tokens) with BcryptJS.
