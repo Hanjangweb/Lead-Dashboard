@@ -1,11 +1,46 @@
 # 🚀 SaaS Lead Dashboard & Reporting System
 
+<<<<<<< HEAD
 A premium, full-stack lead management system designed to streamline data tracking, provide actionable insights, and ensure a seamless user experience. Built with a modern tech stack including Node.js, MongoDB, React, and Vite.
+=======
+A premium, full-stack lead management system built with Node.js, MongoDB, and React.
+
+## Deployment Instructions (Render)
+
+### 1. Backend Deployment (Node.js)
+1. Create a **New Web Service** on Render.
+2. Connect your GitHub repository.
+3. **Root Directory:** `backend`
+4. **Environment:** `Node`
+5. **Build Command:** `npm install`
+6. **Start Command:** `node server.js`
+7. **Environment Variables:**
+   - `PORT`: `9000` (or leave default)
+   - `MONGO_URI`: `Your MongoDB Connection String`
+   - `JWT_SECRET`: `Your Secret Key`
+   - `DB_NAME`: `LeadDashboard`
+
+### 2. Frontend Deployment (React/Vite)
+1. Go to your Vercel Dashboard and select Add New > Project.
+2. Import your GitHub repository.
+3. Framework Preset: Select Vite (Vercel usually auto-detects this).
+4. **Root Directory:** `frontend`
+5. **Build Command:** `npm install; npm run build`
+6. **Publish Directory:** `dist`
+7. **Environment Variables:**
+   - `VITE_API_URL`: `https://your-backend-url.onrender.com/api`
+8. Click Deploy.
+9. **Note:** To ensure client-side routing works correctly on Vercel (preventing 404s on refresh), ensure you have a vercel.json file in your frontend folder with:
+=======
+Note: To ensure client-side routing works correctly on Vercel (preventing 404s on refresh), ensure you have a vercel.json file in your frontend folder with:
+{ "rewrites": [{ "source": "/(.*)", "destination": "/" }] }
+>>>>>>> e7a757996af34ba0202ad4f2bc09ad5f38ecd1cd
 
 ---
 
 ## ✨ Features
 
+<<<<<<< HEAD
 - **Lead Management:** Comprehensive CRUD operations to Add, View, Update, and Delete leads seamlessly.
 - **Interactive Dashboard:** Dynamic real-time KPI cards, status distribution, and service-wise charts for quick insights.
 - **Advanced Reporting:** Robust filtering capabilities by date, status, city, and service, complete with one-click CSV export functionality.
@@ -147,3 +182,9 @@ Contributions, issues, and feature requests are welcome! Feel free to check the 
 ## 📄 License
 
 This project is licensed under the MIT License.
+=======
+##  Tech Stack
+- **Frontend:** React, Tailwind CSS, Framer Motion, Lucide Icons.
+- **Backend:** Node.js, Python, Express, MongoDB (Mongoose).
+- **Auth:** JWT (JSON Web Tokens) with BcryptJS.
+>>>>>>> e7a757996af34ba0202ad4f2bc09ad5f38ecd1cd
