@@ -1,6 +1,6 @@
 # 🚀 SaaS Lead Dashboard & Reporting System
 
-<<<<<<< HEAD
+
 A premium, full-stack lead management system designed to streamline data tracking, provide actionable insights, and ensure a seamless user experience. Built with a modern tech stack including Node.js, MongoDB, React, and Vite.
 =======
 A premium, full-stack lead management system built with Node.js, MongoDB, and React.
@@ -34,13 +34,13 @@ A premium, full-stack lead management system built with Node.js, MongoDB, and Re
 =======
 Note: To ensure client-side routing works correctly on Vercel (preventing 404s on refresh), ensure you have a vercel.json file in your frontend folder with:
 { "rewrites": [{ "source": "/(.*)", "destination": "/" }] }
->>>>>>> e7a757996af34ba0202ad4f2bc09ad5f38ecd1cd
+
 
 ---
 
 ## ✨ Features
 
-<<<<<<< HEAD
+
 - **Lead Management:** Comprehensive CRUD operations to Add, View, Update, and Delete leads seamlessly.
 - **Interactive Dashboard:** Dynamic real-time KPI cards, status distribution, and service-wise charts for quick insights.
 - **Advanced Reporting:** Robust filtering capabilities by date, status, city, and service, complete with one-click CSV export functionality.
@@ -187,4 +187,4 @@ This project is licensed under the MIT License.
 - **Frontend:** React, Tailwind CSS, Framer Motion, Lucide Icons.
 - **Backend:** Node.js, Python, Express, MongoDB (Mongoose).
 - **Auth:** JWT (JSON Web Tokens) with BcryptJS.
->>>>>>> e7a757996af34ba0202ad4f2bc09ad5f38ecd1cd
+
