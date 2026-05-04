@@ -177,7 +177,7 @@ SaaS-Dashboard/
 
 ## 🤝 Contributing
 
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/yourusername/saas-dashboard/issues).
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/hanjangweb/saas-dashboard/issues).
 
 ## 📄 License
 
