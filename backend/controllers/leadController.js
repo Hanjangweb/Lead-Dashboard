@@ -1,4 +1,5 @@
 const Lead = require('../models/Lead');
+const Notification = require('../models/Notification');
 const { Parser } = require('json2csv');
 const mongoose = require('mongoose');
 
@@ -6,6 +7,14 @@ exports.createLead = async (req, res) => {
   try {
     const leadData = { ...req.body, userId: req.user.id };
     const lead = await Lead.create(leadData);
+
+    // Create Notification
+    await Notification.create({
+      userId: req.user.id,
+      type: 'Lead',
+      message: `New lead added: ${lead.name} from ${lead.city}`
+    });
+
     res.status(201).json(lead);
   } catch (err) {
     res.status(400).json({ message: "Failed to create lead", error: err.message });

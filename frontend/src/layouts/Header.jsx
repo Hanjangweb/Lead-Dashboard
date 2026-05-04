@@ -17,15 +17,26 @@ export default function Header({ toggleSidebar }) {
   const [showPw, setShowPw] = useState({ current: false, newP: false, confirm: false });
   const [saving, setSaving] = useState(false);
   const [tab, setTab] = useState("info"); // "info" | "password"
-  const [notifs, setNotifs] = useState(() => {
-    const saved = localStorage.getItem("readNotifs");
-    const readIds = saved ? JSON.parse(saved) : [];
-    return [
-      { id: 1, icon: <Users size={16} />, color: "bg-indigo-100 text-indigo-600", text: "New lead added from Mumbai", time: "2m ago", read: readIds.includes(1) },
-      { id: 2, icon: <TrendingUp size={16} />, color: "bg-emerald-100 text-emerald-600", text: "Conversion rate improved to 22%", time: "1h ago", read: readIds.includes(2) },
-      { id: 3, icon: <BarChart2 size={16} />, color: "bg-amber-100 text-amber-600", text: "Monthly report is ready to export", time: "3h ago", read: readIds.includes(3) },
-    ];
-  });
+  const [notifs, setNotifs] = useState([]);
+
+  // Time formatter helper
+  const formatTime = (date) => {
+    const now = new Date();
+    const diff = Math.floor((now - new Date(date)) / 1000); // seconds
+    if (diff < 60) return "Just now";
+    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+    return `${Math.floor(diff / 86400)}d ago`;
+  };
+
+  // Icon/Color helper
+  const getNotifMeta = (type) => {
+    switch (type) {
+      case 'Lead': return { icon: <Users size={16} />, color: "bg-indigo-100 text-indigo-600" };
+      case 'Trending': return { icon: <TrendingUp size={16} />, color: "bg-emerald-100 text-emerald-600" };
+      default: return { icon: <BarChart2 size={16} />, color: "bg-amber-100 text-amber-600" };
+    }
+  };
 
   const navigate = useNavigate();
 
@@ -42,7 +53,20 @@ export default function Header({ toggleSidebar }) {
         localStorage.setItem("user", JSON.stringify({ name: data.name, email: data.email }));
       })
       .catch(() => { }); // silently fail if not logged in
+
+    fetchNotifs();
+    const interval = setInterval(fetchNotifs, 30000); // poll every 30s
+    return () => clearInterval(interval);
   }, []);
+
+  const fetchNotifs = async () => {
+    try {
+      const { data } = await API.get("/notifications");
+      setNotifs(data);
+    } catch (err) {
+      console.error("Failed to fetch notifications:", err);
+    }
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -113,15 +137,25 @@ export default function Header({ toggleSidebar }) {
     window.location.href = "/login";
   };
 
-  const handleMarkAllRead = () => {
-    setNotifs(prev => {
-      const updated = prev.map(n => ({ ...n, read: true }));
-      localStorage.setItem("readNotifs", JSON.stringify(updated.map(n => n.id)));
-      return updated;
-    });
+  const handleMarkAllRead = async () => {
+    try {
+      await API.put("/notifications/read-all");
+      setNotifs(prev => prev.map(n => ({ ...n, isRead: true })));
+    } catch (err) {
+      toast.error("Failed to mark all as read");
+    }
   };
 
-  const unreadCount = notifs.filter(n => !n.read).length;
+  const handleMarkRead = async (id) => {
+    try {
+      await API.put(`/notifications/${id}/read`);
+      setNotifs(prev => prev.map(n => n._id === id ? { ...n, isRead: true } : n));
+    } catch (err) {
+      console.error("Failed to mark read:", err);
+    }
+  };
+
+  const unreadCount = notifs.filter(n => !n.isRead).length;
 
   const inputCls = "w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all";
 
@@ -212,20 +246,25 @@ export default function Header({ toggleSidebar }) {
                       )}
                     </div>
                     <div className="divide-y divide-slate-50 max-h-[300px] overflow-y-auto">
-                      {notifs.map(n => (
-                        <div key={n.id} className={`flex items-start gap-4 px-5 py-4 hover:bg-slate-50 transition-colors cursor-pointer ${n.read ? 'opacity-50' : ''}`} onClick={() => setNotifs(prev => {
-                          const updated = prev.map(item => item.id === n.id ? { ...item, read: true } : item);
-                          localStorage.setItem("readNotifs", JSON.stringify(updated.filter(item => item.read).map(item => item.id)));
-                          return updated;
-                        })}>
-                          <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${n.color}`}>{n.icon}</div>
-                          <div>
-                            <p className={`text-sm font-semibold leading-snug ${n.read ? 'text-slate-500' : 'text-slate-700'}`}>{n.text}</p>
-                            <p className="text-[10px] text-slate-400 font-bold mt-0.5">{n.time}</p>
-                          </div>
-                          {!n.read && <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full mt-2" />}
+                      {notifs.length === 0 ? (
+                        <div className="px-5 py-10 text-center">
+                          <p className="text-sm font-semibold text-slate-400">No notifications yet</p>
                         </div>
-                      ))}
+                      ) : (
+                        notifs.map(n => {
+                          const meta = getNotifMeta(n.type);
+                          return (
+                            <div key={n._id} className={`flex items-start gap-4 px-5 py-4 hover:bg-slate-50 transition-colors cursor-pointer ${n.isRead ? 'opacity-50' : ''}`} onClick={() => !n.isRead && handleMarkRead(n._id)}>
+                              <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${meta.color}`}>{meta.icon}</div>
+                              <div>
+                                <p className={`text-sm font-semibold leading-snug ${n.isRead ? 'text-slate-500' : 'text-slate-700'}`}>{n.message}</p>
+                                <p className="text-[10px] text-slate-400 font-bold mt-0.5">{formatTime(n.createdAt)}</p>
+                              </div>
+                              {!n.isRead && <div className="w-1.5 h-1.5 bg-indigo-600 rounded-full mt-2" />}
+                            </div>
+                          );
+                        })
+                      )}
                     </div>
                     <div className="px-5 py-3 border-t border-slate-50">
                       <button onClick={handleMarkAllRead} className="w-full text-center text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors cursor-pointer py-1">

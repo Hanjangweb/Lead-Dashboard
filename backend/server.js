@@ -31,7 +31,9 @@ app.get("/", (req, res) => res.send("Lead Dashboard API is running..."));
 // This matches your frontend call: http://localhost:5000/api/auth/register
 app.use("/api/auth", authRoutes); 
 const leadRoutes = require("./routes/leadRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
 app.use("/api", leadRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 // Global Error Handler (Optional but helpful)
 app.use((err, req, res, next) => {
