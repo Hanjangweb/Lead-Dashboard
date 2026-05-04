@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const leadController = require('../controllers/leadController');
+const protect = require('../middleware/authMiddleware');
+
+// Apply protection to all routes in this router
+router.use(protect);
 
 // ─── Static routes MUST come before /:id routes ────────────────────────────
 router.get('/leads/stats',  leadController.getDashboardStats);

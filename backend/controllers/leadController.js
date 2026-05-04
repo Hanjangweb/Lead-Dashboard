@@ -1,9 +1,11 @@
 const Lead = require('../models/Lead');
 const { Parser } = require('json2csv');
+const mongoose = require('mongoose');
 
 exports.createLead = async (req, res) => {
   try {
-    const lead = await Lead.create(req.body);
+    const leadData = { ...req.body, userId: req.user.id };
+    const lead = await Lead.create(leadData);
     res.status(201).json(lead);
   } catch (err) {
     res.status(400).json({ message: "Failed to create lead", error: err.message });
@@ -13,7 +15,7 @@ exports.createLead = async (req, res) => {
 exports.getLeads = async (req, res) => {
   try {
     const { city, status, service, startDate, endDate, search, page = 1, limit = 50 } = req.query;
-    let filter = {};
+    let filter = { userId: req.user.id };
 
     if (city) filter.city = { $regex: city, $options: "i" };
     if (status) filter.status = status;
@@ -51,12 +53,12 @@ exports.getLeads = async (req, res) => {
 
 exports.updateLead = async (req, res) => {
   try {
-    const updated = await Lead.findByIdAndUpdate(
-      req.params.id,
+    const updated = await Lead.findOneAndUpdate(
+      { _id: req.params.id, userId: req.user.id },
       req.body,
-      { new: true, runValidators: true }
+      { returnDocument: 'after', runValidators: true }
     );
-    if (!updated) return res.status(404).json({ message: "Lead not found" });
+    if (!updated) return res.status(404).json({ message: "Lead not found or unauthorized" });
     res.json(updated);
   } catch (err) {
     res.status(400).json({ message: "Failed to update lead", error: err.message });
@@ -65,8 +67,8 @@ exports.updateLead = async (req, res) => {
 
 exports.deleteLead = async (req, res) => {
   try {
-    const deleted = await Lead.findByIdAndDelete(req.params.id);
-    if (!deleted) return res.status(404).json({ message: "Lead not found" });
+    const deleted = await Lead.findOneAndDelete({ _id: req.params.id, userId: req.user.id });
+    if (!deleted) return res.status(404).json({ message: "Lead not found or unauthorized" });
     res.json({ message: "Lead deleted successfully" });
   } catch (err) {
     res.status(500).json({ message: "Failed to delete lead", error: err.message });
@@ -75,25 +77,30 @@ exports.deleteLead = async (req, res) => {
 
 exports.getDashboardStats = async (req, res) => {
   try {
-    const total = await Lead.countDocuments();
+    const userId = new mongoose.Types.ObjectId(req.user.id);
+    const total = await Lead.countDocuments({ userId });
 
     const byStatus = await Lead.aggregate([
+      { $match: { userId } },
       { $group: { _id: "$status", count: { $sum: 1 } } },
       { $sort: { count: -1 } }
     ]);
 
     const byCity = await Lead.aggregate([
+      { $match: { userId } },
       { $group: { _id: "$city", count: { $sum: 1 } } },
       { $sort: { count: -1 } },
       { $limit: 10 }
     ]);
 
     const byService = await Lead.aggregate([
+      { $match: { userId } },
       { $group: { _id: "$service", count: { $sum: 1 } } },
       { $sort: { count: -1 } }
     ]);
 
     const monthly = await Lead.aggregate([
+      { $match: { userId } },
       { 
         $group: { 
           _id: { $dateToString: { format: "%Y-%m", date: "$createdAt" } }, 
@@ -113,7 +120,7 @@ exports.getDashboardStats = async (req, res) => {
 exports.exportCSV = async (req, res) => {
   try {
     const { city, status, service, startDate, endDate } = req.query;
-    let filter = {};
+    const filter = { userId: req.user.id };
 
     if (city) filter.city = { $regex: city, $options: "i" };
     if (status) filter.status = status;
@@ -160,6 +167,7 @@ exports.getInsights = async (req, res) => {
     const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
 
+    const userId = new mongoose.Types.ObjectId(req.user.id);
     const [
       total,
       converted,
@@ -173,18 +181,18 @@ exports.getInsights = async (req, res) => {
       avgBudgetAgg,
       rejectedByServiceAgg,
     ] = await Promise.all([
-      Lead.countDocuments(),
-      Lead.countDocuments({ status: 'Converted' }),
-      Lead.countDocuments({ status: 'New' }),
-      Lead.countDocuments({ status: 'Interested' }),
-      Lead.countDocuments({ status: 'Rejected' }),
-      Lead.countDocuments({ createdAt: { $gte: startOfThisMonth } }),
-      Lead.countDocuments({ createdAt: { $gte: startOfLastMonth, $lt: startOfThisMonth } }),
-      Lead.aggregate([{ $group: { _id: "$city",    count: { $sum: 1 } } }, { $sort: { count: -1 } }, { $limit: 3 }]),
-      Lead.aggregate([{ $group: { _id: "$service", count: { $sum: 1 } } }, { $sort: { count: -1 } }, { $limit: 3 }]),
-      Lead.aggregate([{ $group: { _id: null, avg: { $avg: "$budget" }, max: { $max: "$budget" } } }]),
+      Lead.countDocuments({ userId }),
+      Lead.countDocuments({ userId, status: 'Converted' }),
+      Lead.countDocuments({ userId, status: 'New' }),
+      Lead.countDocuments({ userId, status: 'Interested' }),
+      Lead.countDocuments({ userId, status: 'Rejected' }),
+      Lead.countDocuments({ userId, createdAt: { $gte: startOfThisMonth } }),
+      Lead.countDocuments({ userId, createdAt: { $gte: startOfLastMonth, $lt: startOfThisMonth } }),
+      Lead.aggregate([{ $match: { userId } }, { $group: { _id: "$city",    count: { $sum: 1 } } }, { $sort: { count: -1 } }, { $limit: 3 }]),
+      Lead.aggregate([{ $match: { userId } }, { $group: { _id: "$service", count: { $sum: 1 } } }, { $sort: { count: -1 } }, { $limit: 3 }]),
+      Lead.aggregate([{ $match: { userId } }, { $group: { _id: null, avg: { $avg: "$budget" }, max: { $max: "$budget" } } }]),
       Lead.aggregate([
-        { $match: { status: 'Rejected' } },
+        { $match: { userId, status: 'Rejected' } },
         { $group: { _id: "$service", count: { $sum: 1 } } },
         { $sort: { count: -1 } }, { $limit: 1 }
       ]),

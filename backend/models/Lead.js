@@ -41,6 +41,11 @@ const leadSchema = new mongoose.Schema({
       message: '{VALUE} is not a valid status'
     }, 
     default: 'New' 
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: [true, 'User ID is required']
   }
 }, { timestamps: true });
 
