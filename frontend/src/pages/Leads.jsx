@@ -117,8 +117,9 @@ export default function Leads() {
       }
       closeModal();
       fetchLeads();
-    } catch {
-      toast.error(modalMode === "add" ? "Failed to add lead" : "Failed to update lead");
+    } catch (err) {
+      const msg = err.response?.data?.error || err.response?.data?.message || "Operation failed";
+      toast.error(msg);
     }
   };
 

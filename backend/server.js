@@ -11,7 +11,9 @@ app.use(cors());
 
 app.use(express.json());
 app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
+  res.on('finish', () => {
+    console.log(`${req.method} ${req.url} ${res.statusCode}`);
+  });
   next();
 });
 

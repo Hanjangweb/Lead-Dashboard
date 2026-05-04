@@ -10,7 +10,7 @@ const leadSchema = new mongoose.Schema({
   mobile: { 
     type: String, 
     required: [true, 'Mobile number is required'],
-    match: [/^[0-9]{10,15}$/, 'Please enter a valid mobile number (10-15 digits)']
+    match: [/^[+0-9\s\-]{10,20}$/, 'Please enter a valid mobile number']
   },
   email: { 
     type: String, 

@@ -8,15 +8,20 @@ exports.createLead = async (req, res) => {
     const leadData = { ...req.body, userId: req.user.id };
     const lead = await Lead.create(leadData);
 
-    // Create Notification
-    await Notification.create({
-      userId: req.user.id,
-      type: 'Lead',
-      message: `New lead added: ${lead.name} from ${lead.city}`
-    });
+    // Create Notification (non-blocking)
+    try {
+      await Notification.create({
+        userId: req.user.id,
+        type: 'Lead',
+        message: `New lead added: ${lead.name} from ${lead.city}`
+      });
+    } catch (notifErr) {
+      console.error("Notification creation failed:", notifErr.message);
+    }
 
     res.status(201).json(lead);
   } catch (err) {
+    console.error("LEAD CREATION ERROR:", err.message);
     res.status(400).json({ message: "Failed to create lead", error: err.message });
   }
 };
